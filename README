@@ -541,8 +541,674 @@ Main Porcelain Commands
    fetch                   Download objects and refs from another repository
    format-patch            Prepare patches for e-mail submission
    gc                      Cleanup unnecessary files and optimize the local repository
+
+manual ers  that  do                                            not  acknowledge  or  properly implement TFTP options. When this
+              option is used --tftp-blksize is ignored.
+              Providing --tftp-no-options multiple times has no extra  effect.
+              Disable it again with --no-tftp-no-options.
+              Example:
+               curl --tftp-no-options tftp://192.168.0.1/
+              See also --tftp-blksize.
+       -z, --time-cond <time>
+              (HTTP  FTP) Request a file that has been modified later than the                                            given time and date, or one that has been modified  before  that
+              time.  The <date expression> can be all sorts of date strings or                                            if it does not match any internal ones, it is taken as  a  file-
+              name  and tries to get the modification date (mtime) from <file>                                            instead. See the curl_getdate(3) man pages for  date  expression                                            details.
+
+              Start the date expression with a dash (-) to make it request for                                            a document that is older than the given date/time, default is  a
+              document that is newer than the specified date/time.
+              If  provided  a  non-existing file, curl outputs a warning about
+              that fact and proceeds to do the transfer without a time  condi-                                            tion.
+
+              If  --time-cond is provided several times, the last set value is
+              used.
+              Examples:                                              curl -z "Wed 01 Sep 2021 12:18:00" https://example.com                                                      curl -z "-Wed 01 Sep 2021 12:18:00" https://example.com
+               curl -z file https://example.com
+
+              See also --etag-compare and -R, --remote-time.
+       --tls-max <VERSION>
+              (TLS) VERSION defines maximum supported TLS version. The minimum
+              acceptable  version  is  set  by  tlsv1.0,  tlsv1.1,  tlsv1.2 or                                            tlsv1.3.
+              If the connection is done without TLS, this option  has  no  ef-
+              fect. This includes QUIC-using (HTTP/3) transfers.
+
+              default                                                      Use up to recommended TLS version.
+              1.0    Use up to TLSv1.0.                             1.1    Use up to TLSv1.1.
+              1.2    Use up to TLSv1.2.                             1.3    Use up to TLSv1.3.
+
+              If  --tls-max  is  provided several times, the last set value is                                            used.
+
+              Examples:
+               curl --tls-max 1.2 https://example.com                curl --tls-max 1.3 --tlsv1.2 https://example.com
+              See  also  --tlsv1.0,  --tlsv1.1,   --tlsv1.2   and   --tlsv1.3.
+              --tls-max requires that the underlying libcurl was built to sup-                                            port TLS. Added in 7.54.0.
+       --tls13-ciphers <ciphersuite list>                           (TLS) Specifies which cipher suites to use in the connection  if                                            it  negotiates  TLS 1.3. The list of ciphers suites must specify
+              valid ciphers. Read up on TLS 1.3 cipher suite details  on  this
+              URL:
+              https://curl.se/docs/ssl-ciphers.html
+              This  option  is  currently  used only when curl is built to use                                            OpenSSL 1.1.1 or later, or Schannel. If you are using a  differ-                                            ent SSL backend you can try setting TLS 1.3 cipher suites by us-                                            ing the --ciphers option.
+
+              If --tls13-ciphers is provided several times, the last set value                                            is used.
+              Example:                                               curl --tls13-ciphers TLS_AES_128_GCM_SHA256 https://example.com
+
+              See also --ciphers, --curves and --proxy-tls13-ciphers. Added in                                            7.61.0.
+       --tlsauthtype <type>
+              (TLS) Set TLS authentication type. Currently, the only supported
+              option  is  "SRP",  for  TLS-SRP  (RFC  5054).  If --tlsuser and                                            --tlspassword are specified but --tlsauthtype is not, then  this                                            option defaults to "SRP". This option works only if the underly-                                            ing libcurl  is  built  with  TLS-SRP  support,  which  requires                                            OpenSSL or GnuTLS with TLS-SRP support.
+              If  --tlsauthtype  is provided several times, the last set value
+              is used.                                              Example:                                               curl --tlsauthtype SRP https://example.com
+
+              See also --tlsuser.
+       --tlspassword <string>                                       (TLS) Set password for use with the  TLS  authentication  method                                            specified  with  --tlsauthtype.  Requires that --tlsuser also be                                            set.
+              This option does not work with TLS 1.3.
+
+              If --tlspassword is provided several times, the last  set  value                                            is used.                                              Example:
+               curl --tlspassword pwd --tlsuser user https://example.com
+
+              See also --tlsuser.
+
+       --tlsuser <name>
+              (TLS)  Set  username  for use with the TLS authentication method                                            specified with --tlsauthtype. Requires that  --tlspassword  also                                            is set.
+              This option does not work with TLS 1.3.
+              If  --tlsuser  is  provided several times, the last set value is
+              used.
+              Example:                                               curl --tlspassword pwd --tlsuser user https://example.com
+              See also --tlspassword.
+       --tlsv1.0                                                    (TLS) Forces curl to use TLS version 1.0 or later when  connect-                                            ing to a remote TLS server.
+
+              In  old  versions  of  curl  this option was documented to allow                                            _only_ TLS 1.0.  That behavior was inconsistent depending on the                                            TLS library. Use --tls-max if you want to set a maximum TLS ver-                                            sion.
+
+              Providing --tlsv1.0 multiple times has no extra effect.
+
+              Example:
+               curl --tlsv1.0 https://example.com
+              See also --tlsv1.3.
+       --tlsv1.1                                                    (TLS) Forces curl to use TLS version 1.1 or later when  connect-                                            ing to a remote TLS server.
+              In  old  versions  of  curl  this option was documented to allow
+              _only_ TLS 1.1.  That behavior was inconsistent depending on the
+              TLS library. Use --tls-max if you want to set a maximum TLS ver-
+              sion.
+              Providing --tlsv1.1 multiple times has no extra effect.
+
+              Example:                                               curl --tlsv1.1 https://example.com
+              See also --tlsv1.3 and --tls-max.
+       --tlsv1.2                                                    (TLS) Forces curl to use TLS version 1.2 or later when  connect-                                            ing to a remote TLS server.
+
+              In  old  versions  of  curl  this option was documented to allow                                            _only_ TLS 1.2.  That behavior was inconsistent depending on the                                            TLS library. Use --tls-max if you want to set a maximum TLS ver-                                            sion.
+
+              Providing --tlsv1.2 multiple times has no extra effect.
+
+              Example:                                               curl --tlsv1.2 https://example.com
+
+              See also --tlsv1.3 and --tls-max.
+
+       --tlsv1.3
+              (TLS) Forces curl to use TLS version 1.3 or later when  connect-
+              ing to a remote TLS server.
+              If  the  connection  is done without TLS, this option has no ef-
+              fect. This includes QUIC-using (HTTP/3) transfers.
+
+              Note that TLS 1.3 is not supported by all TLS backends.
+              Providing --tlsv1.3 multiple times has no extra effect.
+              Example:                                               curl --tlsv1.3 https://example.com
+              See also --tlsv1.2 and --tls-max. Added in 7.52.0.
+       -1, --tlsv1                                                  (TLS) Tells curl to use at least TLS version 1.x when  negotiat-                                            ing  with  a  remote  TLS  server. That means TLS version 1.0 or
+              higher
+              Providing --tlsv1 multiple times has no extra effect.
+
+              Example:                                               curl --tlsv1 https://example.com
+              See also --http1.1 and --http2. -1, --tlsv1  requires  that  the
+              underlying  libcurl was built to support TLS. This option is mu-
+              tually exclusive to --tlsv1.1 and --tlsv1.2 and --tlsv1.3.
+       --tr-encoding                                                (HTTP) Request a compressed Transfer-Encoding response using one                                            of  the  algorithms curl supports, and uncompress the data while
+              receiving it.
+              Providing --tr-encoding multiple  times  has  no  extra  effect.                                            Disable it again with --no-tr-encoding.
+              Example:                                               curl --tr-encoding https://example.com
+              See also --compressed.
+
+       --trace-ascii <file>
+              Enables a full trace dump of all incoming and outgoing data, in-
+              cluding descriptive information, to the given output  file.  Use
+              "-" as filename to have the output sent to stdout.
+
+              This is similar to --trace, but leaves out the hex part and only                                            shows the ASCII part of the dump. It makes smaller  output  that                                            might be easier to read for untrained humans.
+              Note  that verbose output of curl activities and network traffic
+              might contain sensitive data, including user names,  credentials                                            or  secret  data  content.  Be aware and be careful when sharing                                            trace logs with others.
+              This option is global and does not need to be specified for each                                            use of --next.
+
+              If  --trace-ascii  is provided several times, the last set value
+              is used.
+              Example:                                               curl --trace-ascii log.txt https://example.com
+              See also -v, --verbose and --trace. This option is mutually  ex-                                            clusive to --trace and -v, --verbose.
+
+       --trace-config <string>                                      Set  configuration  for  trace output. A comma-separated list of                                            components where detailed output can  be  made  available  from.                                            Names  are  case-insensitive.  Specify 'all' to enable all trace
+              components.
+              In addition to trace component names, specify "ids"  and  "time"
+              to avoid extra --trace-ids or --trace-time parameters.
+              See the curl_global_trace(3) man page for more details.
+
+              This option is global and does not need to be specified for each                                            use of --next.
+
+              --trace-config can be used several times in a command line
+              Example:                                               curl --trace-config ids,http/2 https://example.com
+              See also -v, --verbose and --trace. This option is mutually  ex-                                            clusive to --trace and -v, --verbose. Added in 8.3.0.
+       --trace-ids                                                  Prepends  the  transfer and connection identifiers to each trace                                            or verbose line that curl displays.
+
+              This option is global and does not need to be specified for each                                            use of --next.
+
+              Providing  --trace-ids multiple times has no extra effect.  Dis-                                            able it again with --no-trace-ids.
+              Example:                                               curl --trace-ids --trace-ascii output https://example.com
+              See also --trace and -v, --verbose. Added in 8.2.0.
+       --trace-time
+              Prepends a time stamp to each trace or verbose  line  that  curl
+              displays.
+              This option is global and does not need to be specified for each
+              use of --next.
+
+              Providing --trace-time multiple times has no extra effect.  Dis-                                            able it again with --no-trace-time.
+              Example:
+               curl --trace-time --trace-ascii output https://example.com
+              See also --trace and -v, --verbose.
+
+       --trace <file>                                               Enables a full trace dump of all incoming and outgoing data, in-                                            cluding descriptive information, to the given output  file.  Use                                            "-"  as  filename  to have the output sent to stdout. Use "%" as                                            filename to have the output sent to stderr.
+
+              Note that verbose output of curl activities and network  traffic                                            might  contain sensitive data, including user names, credentials
+              or secret data content. Be aware and  be  careful  when  sharing                                            trace logs with others.
+              This option is global and does not need to be specified for each
+              use of --next.
+
+              If --trace is provided several times,  the  last  set  value  is                                            used.
+              Example:                                               curl --trace log.txt https://example.com
+
+              See   also   --trace-ascii,   --trace-config,   --trace-ids  and                                            --trace-time. This option is mutually exclusive to -v, --verbose                                            and --trace-ascii.
+
+       --unix-socket <path>
+              (HTTP) Connect through this Unix domain socket, instead of using
+              the network.
+              If --unix-socket is provided several times, the last  set  value
+              is used.                                              Example:
+               curl --unix-socket socket-path https://example.com
+              See also --abstract-unix-socket.
+       -T, --upload-file <file>                                     This transfers the specified local file to the remote URL.
+              If  there is no file part in the specified URL, curl appends the                                            local file name to the end  of  the  URL  before  the  operation                                            starts.  You must use a trailing slash (/) on the last directory                                            to prove to curl that there is no file name or curl thinks  that                                            your last directory name is the remote file name to use.
+
+              When putting the local file name at the end of the URL, curl ig-
+              nores what is on the left side of any slash (/) or backslash (\)                                            used in the file name and only appends what is on the right side
+              of the rightmost such character.
+              Use the file name "-" (a single dash) to use stdin instead of  a                                            given  file.   Alternately,  the file name "." (a single period)                                            may be specified instead of "-" to  use  stdin  in  non-blocking                                            mode  to  allow  reading  server output while stdin is being up-                                            loaded.
+              If this option is used with a HTTP(S) URL,  the  PUT  method  is                                            used.
+              You  can  specify one -T, --upload-file for each URL on the com-                                            mand line. Each -T, --upload-file + URL pair specifies  what  to                                            upload  and  to  where. curl also supports "globbing" of the -T,                                            --upload-file argument, meaning that  you  can  upload  multiple                                            files  to a single URL by using the same URL globbing style sup-                                            ported in the URL.
+              When uploading to an SMTP server: the uploaded data  is  assumed                                            to be RFC 5322 formatted. It has to feature the necessary set of                                            headers and mail body formatted correctly by the  user  as  curl
+              does not transcode nor encode it further in any way.
+              --upload-file can be used several times in a command line
+              Examples:
+               curl -T file https://example.com                      curl -T "img[1-1000].png" ftp://ftp.example.com/                                                            curl --upload-file "{file1,file2}" https://example.com
+              See also -G, --get, -I, --head, -X, --request and -d, --data.
+       --url-query <data>                                           (all)  This  option adds a piece of data, usually a name + value
+              pair, to the end of the URL query part. The syntax is  identical
+              to that used for --data-urlencode with one extension:
+              If the argument starts with a '+' (plus), the rest of the string                                            is provided as-is unencoded.
+              The query part of a URL is the one following the  question  mark                                            on the right end.
+              --url-query can be used several times in a command line
+              Examples:                                              curl --url-query name=val https://example.com                                                               curl --url-query =encodethis http://example.net/foo                                                         curl --url-query name@file https://example.com                                                              curl --url-query @fileonly https://example.com                                                              curl --url-query "+name=%20foo" https://example.com
+              See also --data-urlencode and -G, --get. Added in 7.87.0.
+
+       --url <url>                                                  Specify  a  URL  to  fetch. This option is mostly handy when you
+              want to specify URL(s) in a config file.
+              If the given URL is missing a scheme name (such as "http://"  or
+              "ftp://"  etc) then curl makes a guess based on the host. If the
+              outermost subdomain name matches DICT, FTP, IMAP, LDAP, POP3  or                                            SMTP  then that protocol is used, otherwise HTTP is used. Guess-                                            ing can be avoided by providing a full URL including the scheme,
+              or disabled by setting a default protocol (added in 7.45.0), see                                            --proto-default for details.
+
+              To control where this URL is written, use the  -o,  --output  or                                            the -O, --remote-name options.
+              WARNING:  On  Windows,  particular  file:// accesses can be con-                                            verted to network accesses by the operating system. Beware!
+              --url can be used several times in a command line
+              Example:                                               curl --url https://example.com
+              See also -:, --next and -K, --config.
+
+       -B, --use-ascii                                              (FTP LDAP) Enable ASCII transfer. For FTP, this can also be  en-
+              forced  by  using  a  URL  that ends with ";type=A". This option
+              causes data sent to stdout to be in text mode for win32 systems.                                            Providing --use-ascii multiple times has no extra effect.   Dis-                                            able it again with --no-use-ascii.
+              Example:
+               curl -B ftp://example.com/README
+              See also --crlf and --data-ascii.
+       -A, --user-agent <name>                                      (HTTP) Specify the User-Agent string to send to the HTTP server.
+              To encode blanks in the string, surround the string with  single                                            quote  marks.  This header can also be set with the -H, --header                                            or the --proxy-header options.
+
+              If you give an empty argument to -A, --user-agent (""),  it  re-                                            moves  the  header  completely from the request. If you prefer a
+              blank header, you can set it to a single space (" ").
+
+              If --user-agent is provided several times, the last set value is                                            used.
+              Example:
+               curl -A "Agent 007" https://example.com
+              See also -H, --header and --proxy-header.
+
+       -u, --user <user:password>
+              Specify the user name and password to use for server authentica-                                            tion. Overrides -n, --netrc and --netrc-optional.
+
+              If you simply specify the user name, curl prompts  for  a  pass-                                            word.
+
+              The  user  name  and  passwords are split up on the first colon,                                            which makes it impossible to use a colon in the user  name  with                                            this option. The password can, still.
+
+              On  systems where it works, curl hides the given option argument                                            from process listings. This is not enough to protect credentials                                            from  possibly getting seen by other users on the same system as                                            they still are visible for a moment before cleared. Such  sensi-                                            tive data should be retrieved from a file instead or similar and                                            never used in clear text in a command line.
+              When using Kerberos V5 with a Windows based  server  you  should                                            include  the  Windows domain name in the user name, in order for                                            the server to successfully obtain a Kerberos Ticket. If  you  do                                            not, then the initial authentication handshake may fail.
+              When  using  NTLM,  the user name can be specified simply as the                                            user name, without the domain, if there is a single  domain  and                                            forest in your setup for example.
+
+              To  specify  the domain name use either Down-Level Logon Name or                                            UPN (User Principal Name) formats. For example, EXAMPLE\user and                                            user@example.com respectively.
+
+              If  you  use a Windows SSPI-enabled curl binary and perform Ker-                                            beros V5, Negotiate, NTLM or Digest authentication then you  can                                            tell  curl  to select the user name and password from your envi-                                            ronment by specifying a single colon with this option: "-u :".
+              If --user is provided several times, the last set value is used.
+              Example:
+               curl -u user:secret https://example.com
+              See also -n, --netrc and -K, --config.
+
+       --variable <[%]name=text/@file>                              Set a variable with "name=content" or "name@file" (where  "file"                                            can  be  stdin  if set to a single dash (-)). The name is a case                                            sensitive identifier that must consist of no other letters  than                                            a-z, A-Z, 0-9 or underscore. The specified content is then asso-                                            ciated with this identifier.
+
+              Setting the same variable name again overwrites the old contents                                            with the new.
+
+              The  contents of a variable can be referenced in a later command                                            line option when that option name is prefixed with  "--expand-",                                            and the name is used as "{{name}}" (without the quotes).
+              --variable can import environment variables into the name space.                                            Opt to either require the environment variable to be set or pro-                                            vide  a default value for the variable in case it is not already                                            set.
+              --variable %name imports the variable called  'name'  but  exits
+              with  an  error if that environment variable is not already set.                                            To provide a default value if the environment  variable  is  not                                            set,  use  --variable %name=content or --variable %name@content.                                            Note that on some systems - but not all - environment  variables                                            are case insensitive.
+              When  expanding variables, curl supports a set of functions that                                            can make the variable contents more convenient to use. You apply
+              a  function  to  a variable expansion by adding a colon and then
+              list the desired functions in a  comma-separated  list  that  is                                            evaluated  in  a  left-to-right  order. Variable content holding
+              null bytes that are not encoded when expanded, causes an error.
+
+              Available functions:
+
+              trim   removes all leading and trailing white space.
+              json   outputs the content using JSON string quoting rules.
+
+              url    shows the content URL (percent) encoded.
+              b64    expands the variable base64 encoded
+              --variable can be used several times in a command line
+              Example:
+               curl --variable name=smith https://example.com
+              See also -K, --config. Added in 8.3.0.
+       -v, --verbose                                                Makes curl verbose during the operation.  Useful  for  debugging                                            and  seeing  what's  going  on "under the hood". A line starting                                            with '>' means "header data" sent by  curl,  '<'  means  "header                                            data"  received  by  curl  that is hidden in normal cases, and a                                            line starting with '*' means additional info provided by curl.
+              If you only want HTTP headers in the output,  -i,  --include  or                                            -D, --dump-header might be more suitable options.
+              If you think this option still does not give you enough details,
+              consider using --trace or --trace-ascii instead.
+              Note that verbose output of curl activities and network  traffic                                            might  contain sensitive data, including user names, credentials                                            or secret data content. Be aware and  be  careful  when  sharing                                            trace logs with others.
+              This option is global and does not need to be specified for each                                            use of --next.
+              Providing --verbose multiple times has no extra effect.  Disable
+              it again with --no-verbose.
+              Example:                                               curl --verbose https://example.com
+
+              See also -i, --include, -s, --silent, --trace and --trace-ascii.                                            This option is mutually exclusive to --trace and --trace-ascii.
+
+       -V, --version                                                Displays information about curl and the libcurl version it uses.                                            The first line includes the full version of  curl,  libcurl  and                                            other 3rd party libraries linked with the executable.
+              The  second line (starts with "Release-Date:") shows the release                                            date.
+              The third line (starts with "Protocols:")  shows  all  protocols                                            that libcurl reports to support.
+              The  fourth  line  (starts with "Features:") shows specific fea-                                            tures libcurl reports to offer. Available features include:
+              `alt-svc`                                                    Support for the Alt-Svc: header is provided.
+              `AsynchDNS`                                                  This curl uses asynchronous name  resolves.  Asynchronous                                                   name  resolves can be done using either the c-ares or the                                                   threaded resolver backends.
+              `brotli`
+                     Support for automatic brotli compression over HTTP(S).
+              `CharConv`                                                   curl was built with support for character set conversions                                                   (like EBCDIC)
+              `Debug`
+                     This  curl  uses a libcurl built with Debug. This enables                                                   more  error-tracking  and  memory  debugging   etc.   For                                                   curl-developers only!
+              `gsasl`                                                      The  built-in  SASL authentication includes extensions to                                                   support SCRAM because libcurl was built with libgsasl.
+              `GSS-API`                                                    GSS-API is supported.
+              `HSTS` HSTS support is present.
+              `HTTP2`                                                      HTTP/2 support has been built-in.
+              `HTTP3`                                                      HTTP/3 support has been built-in.
+              `HTTPS-proxy`                                                This curl is built to support HTTPS proxy.
+
+              `IDN`  This curl supports IDN - international domain names.
+              `IPv6` You can use IPv6 with this.
+
+              `Kerberos`                                                   Kerberos V5 authentication is supported.
+
+              `Largefile`
+                     This curl supports transfers of large files, files larger
+                     than 2GB.
+              `libz` Automatic decompression (via gzip, deflate) of compressed                                                   files over HTTP is supported.
+              `MultiSSL`                                                   This curl supports multiple TLS backends.
+              `NTLM` NTLM authentication is supported.
+              `NTLM_WB`                                                    NTLM delegation to winbind helper is supported.
+              `PSL`  PSL is short for Public Suffix List and means  that  this
+                     curl  has  been  built  with knowledge about "public suf-                                                   fixes".
+              `SPNEGO`                                                     SPNEGO authentication is supported.
+              `SSL`  SSL versions of various protocols are supported, such  as
+                     HTTPS, FTPS, POP3S and so on.
+              `SSPI` SSPI is supported.
+
+              `TLS-SRP`                                                    SRP  (Secure Remote Password) authentication is supported                                                   for TLS.
+
+              `TrackMemory`                                                Debug memory tracking is supported.
+
+              `Unicode`
+                     Unicode support on Windows.
+              `UnixSockets`                                                Unix sockets support is provided.
+
+              `zstd` Automatic decompression (via zstd)  of  compressed  files                                                   over HTTP is supported.
+              Example:                                               curl --version
+              See also -h, --help and -M, --manual.
+       -w, --write-out <format>                                     Make curl display information on stdout after a completed trans-                                            fer. The format is a string that may contain  plain  text  mixed                                            with  any  number of variables. The format can be specified as a                                            literal "string", or you can have curl read the  format  from  a                                            file  with  "@filename" and to tell curl to read the format from                                            stdin you write "@-".
+              The variables present in the output format  are  substituted  by                                            the  value or text that curl thinks fit, as described below. All                                            variables are specified as %{variable_name} and to output a nor-                                            mal % you just write them as %%. You can output a newline by us-                                            ing \n, a carriage return with \r and a tab space with \t.
+              The output is by default written to standard output, but can  be                                            changed with %{stderr} and %output{}.
+              Output  HTTP  headers  from  the  most  recent  request by using
+              %header{name} where name is the case  insensitive  name  of  the
+              header (without the trailing colon). The header contents are ex-                                            actly as sent over the network, with leading and trailing white-                                            space trimmed (added in 7.84.0).
+
+              Select  a  specific  target destination file to write the output                                            to, by using %output{name} (added in curl 8.3.0) where  name  is
+              the  full  file  name.  The output following that instruction is                                            then written to that file. More than one  %output{}  instruction
+              can  be  specified  in  the same write-out argument. If the file                                            name cannot be created, curl leaves the  output  destination  to                                            the  one  used  prior  to  the  %output{} instruction. Use %out-                                            put{>>name} to append data to an existing file.
+              NOTE: In Windows the %-symbol is a special symbol used to expand                                            environment  variables. In batch files all occurrences of % must                                            be doubled when using this option to properly  escape.  If  this                                            option  is  used  at the command prompt then the % cannot be es-                                            caped and unintended expansion is possible.
+              The variables available are:
+              `certs`                                                      Output the certificate chain with details. Supported only                                                   by  the  OpenSSL,  GnuTLS,  Schannel and Secure Transport                                                   backends. (Added in 7.88.0)
+              `content_type`                                               The Content-Type of the requested document, if there  was                                                   any.
+              `errormsg`                                                   The error message. (Added in 7.75.0)
+              `exitcode`                                                   The  numerical  exit  code  of  the  transfer.  (Added in                                                   7.75.0)
+
+              `filename_effective`
+                     The ultimate filename that curl writes out  to.  This  is
+                     only  meaningful  if curl is told to write to a file with
+                     the -O, --remote-name or -o, --output option.  It's  most
+                     useful  in  combination with the -J, --remote-header-name
+                     option.
+              `ftp_entry_path`
+                     The initial path curl ended up in when logging on to  the                                                   remote FTP server.
+
+              `header_json`                                                A JSON object with all HTTP response headers from the re-                                                   cent transfer. Values are provided as  arrays,  since  in
+                     the  case  of multiple headers there can be multiple val-
+                     ues. (Added in 7.83.0)
+                     The header names provided in lowercase, listed  in  order                                                   of  appearance over the wire. Except for duplicated head-                                                   ers. They are grouped on the  first  occurrence  of  that                                                   header, each value is presented in the JSON array.
+              `http_code`                                                  The  numerical  response  code that was found in the last                                                   retrieved HTTP(S) or FTP(s) transfer.
+              `http_connect`                                               The numerical code that was found in  the  last  response                                                   (from a proxy) to a curl CONNECT request.
+              `http_version`                                               The  http  version  that  was effectively used. (Added in                                                   7.50.0)
+              `json` A JSON object with all available keys. (Added in 7.70.0)
+              `local_ip`                                                   The IP address of the local end of the most recently done                                                   connection - can be either IPv4 or IPv6.
+              `local_port`                                                 The  local  port number of the most recently done connec-                                                   tion.
+              `method`                                                     The http method used in the  most  recent  HTTP  request.                                                   (Added in 7.72.0)
+              `num_certs`                                                  Number  of  server certificates received in the TLS hand-                                                   shake. Supported only by the  OpenSSL,  GnuTLS,  Schannel                                                   and Secure Transport backends.  (Added in 7.88.0)
+              `num_connects`                                               Number of new connects made in the recent transfer.
+              `num_headers`                                                The number of response headers in the most recent request                                                   (restarted at each redirect). Note that the  status  line                                                   IS NOT a header. (Added in 7.73.0)  
+              `num_redirects`                                              Number of redirects that were followed in the request.
+              `onerror`                                                    The  rest of the output is only shown if the transfer re-                                                   turned a non-zero error.  (Added in 7.75.0)
+              `proxy_ssl_verify_result`                                    The result of the HTTPS proxy's SSL peer certificate ver-                                                   ification  that  was  requested. 0 means the verification                                                   was successful. (Added in 7.52.0)
+
+              `redirect_url`                                               When an HTTP request was made without -L,  --location  to                                                   follow  redirects  (or  when  --max-redirs  is met), this                                                   variable shows the actual URL a redirect would have  gone                                                   to.
+              `referer`                                                    The Referer: header, if there was any. (Added in 7.76.0)
+              `remote_ip`
+                     The  remote  IP address of the most recently done connec-                                                   tion - can be either IPv4 or IPv6.
+
+              `remote_port`
+                     The remote port number of the most recently done  connec-                                                   tion.
+              `response_code`
+                     The  numerical  response  code that was found in the last
+                     transfer (formerly known as "http_code").
+
+              `scheme`                                                     The URL scheme (sometimes called protocol) that  was  ef-
+                     fectively used. (Added in 7.52.0)
+              `size_download`                                              The  total  amount of bytes that were downloaded. This is                                                   the size of the body/data that was transferred, excluding                                                   headers.
+              `size_header`
+                     The total amount of bytes of the downloaded headers.
+
+              `size_request`                                               The  total amount of bytes that were sent in the HTTP re-                                                   quest.
+              `size_upload`
+                     The total amount of bytes that were uploaded. This is the
+                     size  of  the  body/data  that was transferred, excluding                                                   headers.
+              `speed_download`                                             The average download speed that  curl  measured  for  the                                                   complete download. Bytes per second.
+              `speed_upload`                                               The  average upload speed that curl measured for the com-                                                   plete upload. Bytes per second.
+              `ssl_verify_result`                                          The result of the SSL peer certificate verification  that                                                   was requested. 0 means the verification was successful.
+              `stderr`
+                     From this point on, the -w, --write-out output is written                                                   to standard error. (Added in 7.63.0)
+
+              `stdout`                                                     From this point on, the -w, --write-out output is written                                                   to standard output.  This is the default, but can be used                                                   to switch back after  switching  to  stderr.   (Added  in
+                     7.63.0)
+              `time_appconnect`                                            The  time,  in  seconds, it took from the start until the                                                   SSL/SSH/etc connect/handshake to the remote host was com-                                                   pleted.
+
+              `time_connect`                                               The  time,  in  seconds, it took from the start until the                                                   TCP connect to the remote host (or proxy) was completed.
+              `time_namelookup`                                            The time, in seconds, it took from the  start  until  the
+                     name resolving was completed.
+              `time_pretransfer`                                           The  time,  in  seconds, it took from the start until the                                                   file transfer was just about to begin. This includes  all                                                   pre-transfer  commands and negotiations that are specific                                                   to the particular protocol(s) involved.
+              `time_redirect`                                              The time, in seconds, it took for all  redirection  steps                                                   including  name lookup, connect, pretransfer and transfer                                                   before the final transaction was started. "time_redirect"                                                   shows  the  complete execution time for multiple redirec-                                                   tions.
+
+              `time_starttransfer`                                         The time, in seconds, it took from the  start  until  the
+                     first  byte  is received.  This includes time_pretransfer                                                   and also the time the server needed to calculate the  re-                                                   sult.
+              `time_total`                                                 The  total  time,  in  seconds,  that  the full operation                                                   lasted.
+              `url`  The URL that was fetched. (Added in 7.75.0)
+              `url.scheme`
+                     The scheme part of the URL that was  fetched.  (Added  in                                                   8.1.0)
+              `url.user`                                                   The  user  part  of  the  URL that was fetched. (Added in                                                   8.1.0)
+              `url.password`                                               The password part of the URL that was fetched. (Added  in
+                     8.1.0)
+              `url.options`                                                The  options  part of the URL that was fetched. (Added in                                                   8.1.0)
+
+              `url.host`                                                   The host part of the URL  that  was  fetched.  (Added  in                                                   8.1.0)
+              `url.port`                                                   The  port  number of the URL that was fetched. If no port                                                   number was specified and the URL scheme  is  known,  that                                                   scheme's default port number is shown. (Added in 8.1.0)
+
+              `url.path`                                                   The  path  part  of  the  URL that was fetched. (Added in
+                     8.1.0)
+              `url.query`                                                  The query part of the URL that  was  fetched.  (Added  in                                                   8.1.0)
+              `url.fragment`                                               The  fragment part of the URL that was fetched. (Added in                                                   8.1.0)
+              `url.zoneid`                                                 The zone id part of the URL that was fetched.  (Added  in
+                     8.1.0)
+
+              `urle.scheme`                                                The  scheme  part  of  the  effective (last) URL that was                                                   fetched. (Added in 8.1.0)
+              `urle.user`                                                  The user part  of  the  effective  (last)  URL  that  was                                                   fetched. (Added in 8.1.0)
+              `urle.password`                                              The  password  part  of the effective (last) URL that was                                                   fetched. (Added in 8.1.0)
+              `urle.options`                                               The options part of the effective  (last)  URL  that  was                                                   fetched. (Added in 8.1.0)
+
+              `urle.host`                                                  The  host  part  of  the  effective  (last)  URL that was                                                   fetched. (Added in 8.1.0)
+              `urle.port`
+                     The port number of the  effective  (last)  URL  that  was                                                   fetched.  If  no  port  number was specified, but the URL                                                   scheme is known, that scheme's  default  port  number  is                                                   shown. (Added in 8.1.0)
+              `urle.path`                                                  The  path  part  of  the  effective  (last)  URL that was                                                   fetched. (Added in 8.1.0)
+              `urle.query`                                                 The query part of  the  effective  (last)  URL  that  was                                                   fetched. (Added in 8.1.0)
+
+              `urle.fragment`                                              The  fragment  part  of the effective (last) URL that was                                                   fetched. (Added in 8.1.0)
+
+              `urle.zoneid`
+                     The zone id part of the effective  (last)  URL  that  was
+                     fetched. (Added in 8.1.0)
+              `urlnum`                                                     The  URL  index  number  of this transfer, 0-indexed. Un-                                                   globbed URLs share the same index number  as  the  origin                                                   globbed URL. (Added in 7.75.0)
+
+              `url_effective`                                              The URL that was fetched last. This is most meaningful if                                                   you have told curl to follow location: headers.
+
+              If --write-out is provided several times, the last set value  is                                            used.
+              Example:                                               curl -w '%{response_code}\n' https://example.com
+
+              See also -v, --verbose and -I, --head.
+       --xattr
+              When  saving  output  to a file, this option tells curl to store                                            certain file metadata in extended  file  attributes.  Currently,                                            the  URL  is  stored  in the "xdg.origin.url" attribute and, for                                            HTTP, the content type is stored in the  "mime_type"  attribute.                                            If the file system does not support extended attributes, a warn-                                            ing is issued.
+              Providing --xattr multiple times has no extra  effect.   Disable                                            it again with --no-xattr.
+              Example:
+               curl --xattr -o storage https://example.com
+              See also -R, --remote-time, -w, --write-out and -v, --verbose.
+FILES                                                        ~/.curlrc
+       Default config file, see -K, --config for details.
+ENVIRONMENT                                                  The environment variables can be specified in lower case or upper case.                                     The lower case version has precedence. "http_proxy" is an exception  as                                     it is only available in lower case.
+       Using  an  environment variable to set the proxy has the same effect as                                     using the -x, --proxy option.
+       `http_proxy` [protocol://]<host>[:port]                      Sets the proxy server to use for HTTP.
+
+       `HTTPS_PROXY` [protocol://]<host>[:port]                     Sets the proxy server to use for HTTPS.
+       `[url-protocol]_PROXY` [protocol://]<host>[:port]
+              Sets the proxy server to use for [url-protocol], where the  pro-
+              tocol  is  a  protocol  that curl supports and as specified in a                                            URL. FTP, FTPS, POP3, IMAP, SMTP, LDAP, etc.
+       `ALL_PROXY` [protocol://]<host>[:port]                       Sets the proxy server to use if no  protocol-specific  proxy  is                                            set.
+       `NO_PROXY` <comma-separated list of hosts/domains>
+              list  of host names that should not go through any proxy. If set                                            to an asterisk '*' only, it matches all hosts. Each name in this                                            list is matched as either a domain name which contains the host-                                            name, or the hostname itself.
+
+              This environment variable disables use of the  proxy  even  when                                            specified with the -x, --proxy option. That is
+              NO_PROXY=direct.example.com curl -x http://proxy.example.com                                                http://direct.example.com
+              accesses the target URL directly, and
+              NO_PROXY=direct.example.com curl -x http://proxy.example.com                                                http://somewhere.example.com
+              accesses the target URL through the proxy.
+              The  list  of  host  names  can also be include numerical IP ad-                                            dresses, and IPv6 versions should then be given without  enclos-                                            ing brackets.
+              IP  addresses  can be specified using CIDR notation: an appended
+              slash and number specifies the number of "network bits"  out  of
+              the  address to use in the comparison (added in 7.86.0). For ex-                                            ample "192.168.0.0/16" would match all addresses  starting  with
+              "192.168".
+       `APPDATA` <dir>                                              On  Windows,  this variable is used when trying to find the home                                            directory. If the primary home variable are all unset.
+       `COLUMNS` <terminal width>                                   If set, the specified number of characters is used as the termi-                                            nal  width  when  the  alternative progress-bar is shown. If not                                            set, curl tries to figure it out using other ways.
+       `CURL_CA_BUNDLE` <file>                                      If set, it is used as the --cacert value. This environment vari-                                            able is ignored if Schannel is used as the TLS backend.
+       `CURL_HOME` <dir>                                            If  set,  is  the first variable curl checks when trying to find                                            its home directory. If not set, it continues to  check  XDG_CON-                                            FIG_HOME
+       `CURL_SSL_BACKEND` <TLS backend>                             If  curl  was built with support for "MultiSSL", meaning that it
+              has built-in support for more than one TLS backend,  this  envi-                                            ronment  variable can be set to the case insensitive name of the
+              particular backend to use when curl is invoked. Setting  a  name                                            that  is not a built-in alternative makes curl stay with the de-                                            fault.
+              SSL backend names (case-insensitive): bearssl, gnutls,  mbedtls,
+              openssl, rustls, schannel, secure-transport, wolfssl
+
+       `HOME` <dir>
+              If  set,  this  is  used to find the home directory when that is
+              needed. Like when looking for the default .curlrc. CURL_HOME and
+              XDG_CONFIG_HOME have preference.
+       `QLOGDIR` <directory name>                                   If  curl was built with HTTP/3 support, setting this environment                                            variable to a local directory makes curl produce qlogs  in  that
+              directory,  using file names named after the destination connec-                                            tion id (in hex). Do note that these  files  can  become  rather                                            large. Works with the ngtcp2 and quiche QUIC backends.
+
+       `SHELL`
+              Used  on  VMS  when  trying  to  detect if using a DCL or a unix                                            shell.
+       `SSL_CERT_DIR` <dir>                                         If set, it is used as the --capath value. This environment vari-                                            able is ignored if Schannel is used as the TLS backend.
+       `SSL_CERT_FILE` <path>                                       If set, it is used as the --cacert value. This environment vari-                                            able is ignored if Schannel is used as the TLS backend.
+       `SSLKEYLOGFILE` <file name>                                  If you set this environment variable to a file name, curl stores                                            TLS  secrets  from  its connections in that file when invoked to
+              enable you to analyze the TLS traffic in real time using network                                            analyzing tools such as Wireshark. This works with the following                                            TLS backends: OpenSSL, libressl, BoringSSL, GnuTLS and wolfSSL.
+       `USERPROFILE` <dir>                                          On Windows, this variable is used when trying to find  the  home                                            directory.  If  the  other,  primary, variable are all unset. If                                            set, curl uses the path "$USERPROFILE\Application Data".
+       `XDG_CONFIG_HOME` <dir>
+              If CURL_HOME is not set, this variable is checked  when  looking
+              for a default .curlrc file.
+PROXY PROTOCOL PREFIXES                                      The  proxy string may be specified with a protocol:// prefix to specify                                     alternative proxy protocols.
+       If no protocol is specified in the proxy string or if the  string  does                                     not match a supported one, the proxy is treated as an HTTP proxy.
+       The supported proxy protocol prefixes are as follows:
+       http://                                                      Makes  it use it as an HTTP proxy. The default if no scheme pre-                                            fix is used.
+
+       https://                                                     Makes it treated as an HTTPS proxy.
+       socks4://                                                    Makes it the equivalent of --socks4
+       socks4a://                                                   Makes it the equivalent of --socks4a
+
+       socks5://                                                    Makes it the equivalent of --socks5
+       socks5h://                                                   Makes it the equivalent of --socks5-hostname
+EXIT CODES                                                   There are a bunch of different error codes and their corresponding  er-                                     ror  messages  that  may  appear under error conditions. At the time of                                     this writing, the exit codes are:
+
+       0      Success. The operation completed successfully according  to  the                                            instructions.
+       1      Unsupported protocol. This build of curl has no support for this                                            protocol.
+       2      Failed to initialize.
+       3      URL malformed. The syntax was not correct.
+       4      A feature or option that was needed to perform the  desired  re-                                            quest  was not enabled or was explicitly disabled at build-time.                                            To make curl able to do this, you probably need another build of                                            libcurl.
+       5      Could  not  resolve proxy. The given proxy host could not be re-                                            solved.
+       6      Could not resolve host. The given remote host could not  be  re-
+              solved.
+       7      Failed to connect to host.
+       8      Weird server reply. The server sent data curl could not parse.
+       9      FTP  access  denied. The server denied login or denied access to
+              the particular resource or directory you wanted to  reach.  Most                                            often  you tried to change to a directory that does not exist on                                            the server.
+
+       10     FTP accept failed. While waiting for the server to connect  back                                            when  an active FTP session is used, an error code was sent over                                            the control connection or similar.
+       11     FTP weird PASS reply. Curl could not parse the reply sent to the                                            PASS request.
+       12     During  an  active  FTP  session while waiting for the server to                                            connect back to curl, the timeout expired.
+       13     FTP weird PASV reply, Curl could not parse the reply sent to the
+              PASV request.
+       14     FTP  weird  227  format.  Curl  could not parse the 227-line the                                            server sent.
+
+       15     FTP cannot use host. Could not resolve the host IP we got in the                                            227-line.
+       16     HTTP/2 error. A problem was detected in the HTTP2 framing layer.                                            This is somewhat generic and can be one out of several problems,                                            see the error message for details.
+       17     FTP  could  not  set binary. Could not change transfer method to
+              binary.
+       18     Partial file. Only a part of the file was transferred.
+       19     FTP could not download/access the given file, the RETR (or simi-
+              lar) command failed.
+
+       21     FTP quote error. A quote command returned error from the server.                                     22     HTTP  page not retrieved. The requested URL was not found or re-                                            turned another error with the  HTTP  error  code  being  400  or                                            above. This return code only appears if -f, --fail is used.
+       23     Write  error. Curl could not write data to a local filesystem or                                            similar.
+       25     Failed starting the upload. For FTP, the server typically denied                                            the STOR command.
+       26     Read error. Various reading problems.
+
+       27     Out of memory. A memory allocation request failed.
+       28     Operation timeout. The specified time-out period was reached ac-                                            cording to the conditions.
+
+       30     FTP PORT failed. The PORT command failed. Not  all  FTP  servers
+              support  the  PORT  command, try doing a transfer using PASV in-                                            stead.
+       31     FTP could not use REST. The REST command failed. This command is                                            used for resumed FTP transfers.
+       33     HTTP range error. The range "command" did not work.
+
+       34     HTTP post error. Internal post-request generation error.
+       35     SSL connect error. The SSL handshaking failed.
+       36     Bad download resume. Could not continue an earlier aborted down-                                            load.
+       37     FILE could not read file. Failed to open the file. Permissions?
+       38     LDAP cannot bind. LDAP bind operation failed.
+
+       39     LDAP search failed.
+       41     Function not found. A required LDAP function was not found.
+       42     Aborted by callback. An application told curl to abort the oper-                                            ation.
+
+       43     Internal error. A function was called with a bad parameter.
+       45     Interface  error.  A  specified  outgoing interface could not be                                            used.
+       47     Too many redirects. When following redirects, curl hit the maxi-
+              mum amount.
+       48     Unknown  option  specified  to  libcurl. This indicates that you
+              passed a weird option to curl that was passed on to libcurl  and
+              rejected. Read up in the manual!
+       49     Malformed telnet option.
+       52     The  server  did not reply anything, which here is considered an                                            error.
+       53     SSL crypto engine not found.
+       54     Cannot set SSL crypto engine as default.
+       55     Failed sending network data.
+       56     Failure in receiving network data.
+       58     Problem with the local certificate.            59     Could not use specified SSL cipher.
+
+       60     Peer certificate cannot be authenticated with known CA  certifi-                                            cates.
+
+       61     Unrecognized transfer encoding.
+       63     Maximum file size exceeded.
+
+       64     Requested FTP SSL level failed.
+       65     Sending the data requires a rewind that failed.
+       66     Failed to initialize SSL Engine.
+
+       67     The  user  name,  password, or similar was not accepted and curl                                            failed to log in.
+
+       68     File not found on TFTP server.
+
+       69     Permission problem on TFTP server.
+       70     Out of disk space on TFTP server.
+
+       71     Illegal TFTP operation.
+       72     Unknown TFTP transfer ID.
+       73     File already exists (TFTP).
+       74     No such user (TFTP).
+       77     Problem reading the SSL CA cert (path? access rights?).
+       78     The resource referenced in the URL does not exist.
+       79     An unspecified error occurred during the SSH session.
+       80     Failed to shut down the SSL connection.
+       82     Could not load CRL file, missing or wrong format.
+       83     Issuer check failed.
+       84     The FTP PRET command failed.
+
+       85     Mismatch of RTSP CSeq numbers.
+
+       86     Mismatch of RTSP Session Identifiers.
+
+       87     Unable to parse FTP file list.
+
+       88     FTP chunk callback reported error.
+       89     No connection available, the session is queued.
+       90     SSL public key does not matched pinned public key.
+
+       91     Invalid SSL certificate status.
+       92     Stream error in HTTP/2 framing layer.
+       93     An API function was called from inside a callback.
+       94     An authentication function returned an error.
+
+       95     A problem was detected in the HTTP/3  layer.  This  is  somewhat                                            generic  and  can  be one out of several problems, see the error
+              message for details.
+
+       96     QUIC connection error. This error may be caused by  an  SSL  li-
+              brary error. QUIC is the protocol used for HTTP/3 transfers.
+       97     Proxy handshake error.
+       98     A  client-side certificate is required to complete the TLS hand-                                            shake.
+       99     Poll or select returned fatal error.
+       XX     More error codes might appear here in future releases.  The  ex-
+              isting ones are meant to never change.
+BUGS                                                         If  you  experience  any  problems  with  curl,  submit an issue in the                                     project's bug tracker on GitHub: https://github.com/curl/curl/issues
+AUTHORS                                                      Daniel Stenberg is the main author, but the whole list of  contributors
+       is found in the separate THANKS file.
+WWW                                                          https://curl.se
+SEE ALSO
+       ftp (1), wget (1)
+~/downloads $
 - 👀 I’m interested in ...
-- 🌱 I’m currently learning ...
+- 🌱 ’m currently learning ...
 - 💞️ I’m looking to collaborate on ...
 - 📫 How to reach me ...
 - 😄 Pronouns: ...
